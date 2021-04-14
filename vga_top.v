@@ -26,12 +26,14 @@ module vga_top(
 	input BtnC,
 	input BtnU,
 	
+	input Sw0, Sw1, Sw2, Sw3, Sw4, Sw5, Sw6, Sw7, Sw8, Sw9, Sw10, Sw11, Sw12, Sw13, Sw14, Sw15,
+	
 	//VGA signal
 	output hSync, vSync,
 	output [3:0] vgaR, vgaG, vgaB,
 	
 	//SSG signal 
-	output An0, An1, An2, An3, An4, An5, An6, An7,
+	output An0, An1, An2, An3, An4, An5, An6, An7, An8, An9, An10, An11, An12, An13, An14, An15,
 	output Ca, Cb, Cc, Cd, Ce, Cf, Cg, Dp,
 	
 	output MemOE, MemWR, RamCS, QuadSpiFlashCS
@@ -43,9 +45,15 @@ module vga_top(
 	wire [6:0] ssdOut;
 	wire [3:0] anode;
 	wire [11:0] rgb;
+	wire [7:0] powerIn;
+	wire [7:0] angleIn;
+	
+	assign powerIn = {Sw15, Sw14, Sw13, Sw12, Sw11, Sw10, Sw9, Sw8};
+	assign angleIn = {Sw7, Sw6, Sw5, Sw4, Sw3, Sw2, Sw1, Sw0};
+	
 	display_controller dc(.clk(ClkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
 	vga_bitchange vbc(.clk(ClkPort), .bright(bright), .button(BtnU), .hCount(hc), .vCount(vc), .rgb(rgb), .score(score));
-	counter cnt(.clk(ClkPort), .displayNumber(score), .anode(anode), .ssdOut(ssdOut));
+	counter cnt(.clk(ClkPort), .displayNumber(score), .powerIn(powerIn), .angleIn(angleIn), .anode(anode), .ssdOut(ssdOut));
 	
 	assign Dp = 1;
 	assign {Ca, Cb, Cc, Cd, Ce, Cf, Cg} = ssdOut[6 : 0];

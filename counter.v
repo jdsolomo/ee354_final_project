@@ -21,40 +21,54 @@
 module counter(
 	input clk,
 	input[15:0] displayNumber,
+	input[3:0] powerIn,
+	input[3:0] angleIn,
 	output reg [3:0] anode,
-	output reg [6:0] ssdOut	
+	output reg [6:0] ssdOut
     );
 	 
 	reg [20:0] refresh;
 	reg [3:0] LEDNumber;
-	wire [1:0] LEDCounter;
+	wire [2:0] LEDCounter;
 	
 	
 	always @ (posedge clk)
 	begin
 		refresh <= refresh + 21'd1;
 	end
-	assign LEDCounter = refresh[20:19];
+	assign LEDCounter = refresh[20:18];
 	
 	always @ (*)
 	 begin
 		case (LEDCounter)
-		2'b00: begin
-			anode = 4'b0111;
+		3'b000: begin
+			anode = 8'b01111111;
 			LEDNumber = displayNumber/1000;
-				end
-		2'b01: begin
-			anode = 4'b1011;
+		        end
+		3'b001: begin
+			anode = 8'b10111111;
 			LEDNumber = (displayNumber % 1000)/100;
 				end
-		2'b10: begin
-			anode = 4'b1101;
+		3'b010: begin
+			anode = 8'b11011111;
 			LEDNumber = ((displayNumber % 1000)%100)/10;
 				end
-		2'b11: begin
-			anode = 4'b1110;
+		3'b011: begin
+			anode = 8'b11101111;
 			LEDNumber = ((displayNumber % 1000)%100)%10;
-				end		
+				end
+		3'b100: begin
+		      anode = 8'b11110111;
+		        end
+		3'b101: begin
+		      anode = 8'b11111011;
+		        end
+		3'b110: begin
+		      anode = 8'b11111101;
+		        end
+		3'b111: begin
+		      anode = 8'b11111110;
+		        end
 		endcase
 	end
 	always @ (*)

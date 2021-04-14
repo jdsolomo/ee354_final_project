@@ -60,13 +60,13 @@ module vga_bitchange(
     //	 else if (greenMiddleSquare == 1)
     //		rgb = GREEN;
          else if (edgeBox == 1)
-            rgb = GREEN;
+            rgb = WHITE;
          else if (groundPlane == 1)
             rgb = WHITE; // white box
          else if (cannonRectangle == 1)
-            rgb = BLUE; // white box
+            rgb = WHITE; // white box
          else
-            rgb = RED; // background color
+            rgb = BLACK; // background color
 
 	
 //	always@ (posedge clk)
@@ -101,7 +101,6 @@ module vga_bitchange(
 
     assign groundPlane = ((hCount >= 10'd144) && (hCount <= 10'd784)) && ((vCount >= 10'd475) && (vCount <= 10'd525)) ? 1 : 0;
     assign cannonRectangle = ((hCount >= 10'd200) && (hCount <= 10'd215)) && ((vCount >= 10'd465) && (vCount <= 10'd475)) ? 1 : 0;
-//    assign edgeBox = ((hCount >= 10'd200) && (hCount <= 10'd220)) && ((vCount >= 10'd300) && (vCount <= 10'd400)) ? 1 : 0;
-    assign edgeBox = (hCount <= 10'd150) && (hCount >= 10'd650) && (vCount <= 10'd100) ? 1 : 0;
+    assign edgeBox = (hCount <= 10'd100) || (hCount >= 10'd700) || (vCount <= 75) ? 1 : 0;
 	
 endmodule
