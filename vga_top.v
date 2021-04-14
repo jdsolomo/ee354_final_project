@@ -33,7 +33,7 @@ module vga_top(
 	output [3:0] vgaR, vgaG, vgaB,
 	
 	//SSG signal 
-	output An0, An1, An2, An3, An4, An5, An6, An7, An8, An9, An10, An11, An12, An13, An14, An15,
+	output An0, An1, An2, An3, An4, An5, An6, An7, //An8, An9, An10, An11, An12, An13, An14, An15,
 	output Ca, Cb, Cc, Cd, Ce, Cf, Cg, Dp,
 	
 	output MemOE, MemWR, RamCS, QuadSpiFlashCS

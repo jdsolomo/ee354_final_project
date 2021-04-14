@@ -99,8 +99,17 @@ module vga_bitchange(
 //	assign greenMiddleSquare = ((hCount >= 10'd340) && (hCount < 10'd380)) &&
 //				   ((vCount >= greenMiddleSquareY) && (vCount <= greenMiddleSquareY + 10'd40)) ? 1 : 0;
 
+//    always@ (posedge clk)
+//        begin
+//            projectileCenterX <= X_INITIAL + velocityX * t;
+//            projectile
+//        end
+
+
+
     assign groundPlane = ((hCount >= 10'd144) && (hCount <= 10'd784)) && ((vCount >= 10'd475) && (vCount <= 10'd525)) ? 1 : 0;
     assign cannonRectangle = ((hCount >= 10'd200) && (hCount <= 10'd215)) && ((vCount >= 10'd465) && (vCount <= 10'd475)) ? 1 : 0;
-    assign edgeBox = (hCount <= 10'd100) || (hCount >= 10'd700) || (vCount <= 75) ? 1 : 0;
+    assign edgeBox = (hCount <= 10'd160) || (hCount >= 10'd775) || (vCount <= 10'd50) ? 1 : 0;
+//    assing projectileBox = ((hCount <= projectileCenterX + 10'd25) && (hCount >= projectileCenterX - 10'd25)) && ((vCount <= projectileCenterY + 10'd10)
 	
 endmodule

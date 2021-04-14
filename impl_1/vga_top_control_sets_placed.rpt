@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 ------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
-| Date         : Tue Apr 13 18:48:16 2021
+| Date         : Tue Apr 13 19:49:47 2021
 | Host         : DESKTOP-J7VM5Q4 running 64-bit major release  (build 9200)
 | Command      : report_control_sets -verbose -file vga_top_control_sets_placed.rpt
 | Design       : vga_top
@@ -60,7 +60,7 @@ Table of Contents
 +--------------+-----------------------+------------------------+-----------------+--------------+
 | No           | No                    | No                     |              24 |            9 |
 | No           | No                    | Yes                    |               0 |            0 |
-| No           | Yes                   | No                     |              10 |            4 |
+| No           | Yes                   | No                     |              10 |            5 |
 | Yes          | No                    | No                     |               0 |            0 |
 | Yes          | No                    | Yes                    |               0 |            0 |
 | Yes          | Yes                   | No                     |              10 |            4 |
@@ -73,9 +73,9 @@ Table of Contents
 +--------------------+----------------------+----------------------+------------------+----------------+--------------+
 |    Clock Signal    |     Enable Signal    |   Set/Reset Signal   | Slice Load Count | Bel Load Count | Bels / Slice |
 +--------------------+----------------------+----------------------+------------------+----------------+--------------+
-|  dc/clk            |                      |                      |                1 |              1 |         1.00 |
 |  dc/pulse          |                      |                      |                1 |              1 |         1.00 |
-|  dc/clk            |                      | dc/hCount[9]_i_1_n_0 |                4 |             10 |         2.50 |
+|  dc/clk            |                      |                      |                1 |              1 |         1.00 |
+|  dc/clk            |                      | dc/hCount[9]_i_1_n_0 |                5 |             10 |         2.00 |
 |  dc/clk            | dc/hCount[9]_i_1_n_0 | dc/vCount[9]_i_1_n_0 |                4 |             10 |         2.50 |
 |  ClkPort_IBUF_BUFG |                      |                      |                7 |             22 |         3.14 |
 +--------------------+----------------------+----------------------+------------------+----------------+--------------+

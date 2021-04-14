@@ -21,8 +21,8 @@
 module counter(
 	input clk,
 	input[15:0] displayNumber,
-	input[3:0] powerIn,
-	input[3:0] angleIn,
+	input[7:0] powerIn,
+	input[7:0] angleIn,
 	output reg [3:0] anode,
 	output reg [6:0] ssdOut
     );

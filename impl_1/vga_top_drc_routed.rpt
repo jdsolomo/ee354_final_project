@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
-| Date         : Tue Apr 13 18:49:05 2021
+| Date         : Tue Apr 13 19:50:44 2021
 | Host         : DESKTOP-J7VM5Q4 running 64-bit major release  (build 9200)
 | Command      : report_drc -file vga_top_drc_routed.rpt -pb vga_top_drc_routed.pb -rpx vga_top_drc_routed.rpx
 | Design       : vga_top
