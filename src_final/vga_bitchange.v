@@ -31,9 +31,9 @@ module vga_bitchange(
     input [9:0] Y_INITIAL,
 	input [9:0] hCount, vCount,
 	output reg [11:0] rgb,
-	output [9:0] projectileCenterX,
-    output [9:0] projectileCenterY,
-    output [49:0] t_air;
+	output reg [9:0] projectileCenterX,
+    output reg [9:0] projectileCenterY,
+    output reg [49:0] t_air
    );
 	
     /* COLOR CONSTANTS */

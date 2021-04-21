@@ -20,13 +20,16 @@ module wwm_sm(
     input Start,
     input Ack,
     input Fire,
-    input [3:0] vX,
-    input [3:0] vY,
-    input projectileCenterX,
-    input projectileCenterY,
+    input [9:0] X_INITIAL,
+    input [9:0] Y_INITIAL,
+    output reg [3:0] vX,
+    output reg [3:0] vY,
+    output reg [9:0] projectileCenterX,
+    output reg [9:0] projectileCenterY,
     output q_I,
     output q_P1Shoot,
-    output q_Animate, q_Done
+    output q_Animate, q_Done,
+    output reg [49:0] t_air
     );
 
     reg [3:0] state;
@@ -45,8 +48,8 @@ module wwm_sm(
         if(Reset)
         begin
             state <= I;
-            vX <= 4'bx;
-            vY <= 4'bx;
+            vX <= 10'd0;
+            vY <= 10'd0;
         end
         else
         begin
@@ -73,8 +76,8 @@ module wwm_sm(
                 ANIMATE:
                 begin
                     // state transfers
-                    if((projectileCenterX <= 675) && (projectileCenterX >= 650) && (projectileCenterY >= 470) && (projectileCenterY <= 475)) state <= DONE;
-                    else if((projectileCenterX >= 775) || (projectileCenterX <= 160) || (projectileCenterY >= 475) || (projectileCenterY <= 50)) state <= P1SHOOT;
+                    if((projectileCenterX <= 10'd675) && (projectileCenterX >= 10'd650) && (projectileCenterY >= 10'd470) && (projectileCenterY <= 10'd475)) state <= DONE;
+                    else if((projectileCenterX >= 10'd775) || (projectileCenterX <= 10'd160) || (projectileCenterY >= 10'd475) || (projectileCenterY <= 10'd50)) state <= P1SHOOT;
                     // data transfers
 
                 end

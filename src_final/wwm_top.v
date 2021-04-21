@@ -20,7 +20,7 @@ module wwm_top (
     input BtnU,
     input BtnR,
 
-    input Sw0, Sw1, Sw2, Sw3,
+    input Sw0, Sw1, Sw2, Sw3, Sw4, Sw5, Sw6, Sw7,
 
     output hSync, vSync,
     output [3:0] vgaR, vgaG, vgaB,
@@ -58,8 +58,6 @@ module wwm_top (
     initial begin
         X_INITIAL = 10'd213;
 		Y_INITIAL = 10'd472;
-        vX = 10'd16;
-		vY = 10'd16;
         t_air = 10'd0;
     end
 
@@ -93,15 +91,18 @@ module wwm_top (
     end
 
     /* Get x velocity and y velocity */
-    assign vX = {Sw7, Sw6, Sw5, Sw4};
-    assign vY = {Sw3, Sw2, Sw1, Sw0};
+    always @ (posedge board_clk, posedge Reset)
+    begin
+        vX <= (10'd8)*Sw7 + (10'd4)*Sw6 + (10'd2)*Sw5 + (10'd1)*Sw4;
+        vY <= (10'd8)*Sw3 + (10'd4)*Sw2 + (10'd2)*Sw1 + (10'd1)*Sw0;
+    end
 
     /* FOR TESTING PURPOSES */
     assign {Ld3, Ld2, Ld1, Ld0} = {q_I, q_P1Shoot, q_Animate, q_Done};
 
     /* Set SSD values to display x and y velocity */
-    assign SSD1 = vX;
-    assign SSD0 = vY;
+    assign SSD1 = {Sw7, Sw6, Sw5, Sw4};
+    assign SSD0 = {Sw3, Sw2, Sw1, Sw0};
 
     /* switch between SSD 1 and 2 */
     assign ssdscan_clk = DIV_CLK[19];
