@@ -1,3 +1,19 @@
+//////////////////////////////////////////////////////////////////////////////////
+// Company:         University of Southern California
+// Engineer:        James Dawson and Josh Solomon
+// 
+// Create Date:     4/20/2021
+// Design Name: 
+// Module Name:     wwm_sm
+// Project Name:    World War Math
+// Target Devices:  Nexys4
+// Tool versions: 
+// Description:     State machine (Initial, Shoot, Animate, Done)
+//
+// Dependencies:    
+//
+//////////////////////////////////////////////////////////////////////////////////
+
 module wwm_sm(
     input clk,
     input Reset,
@@ -10,8 +26,7 @@ module wwm_sm(
     input projectileCenterY,
     output q_I,
     output q_P1Shoot,
-    output q_Animate,
-    output q_Done
+    output q_Animate, q_Done
     );
 
     reg [3:0] state;
@@ -50,7 +65,9 @@ module wwm_sm(
                     // state transfers
                     if(Fire) state <= ANIMATE;
                     // data transfers
-
+                    projectileCenterX <= X_INITIAL;
+                    projectileCenterY <= Y_INITIAL;
+                    t_air <= 10'd0;
                 end
 
                 ANIMATE:

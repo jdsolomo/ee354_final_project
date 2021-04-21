@@ -1,5 +1,19 @@
 `timescale 1ns / 1ps
-
+//////////////////////////////////////////////////////////////////////////////////
+// Company:         University of Southern California
+// Engineer:        James Dawson and Josh Solomon
+// 
+// Create Date:     4/20/2021
+// Design Name: 
+// Module Name:     wwm_top
+// Project Name:    World War Math
+// Target Devices:  Nexys4
+// Tool versions: 
+// Description:     Instantiate modules, handle I/O
+//
+// Dependencies:    wwm_sm.v, vga_bitchange.v, display_controller.v
+//
+//////////////////////////////////////////////////////////////////////////////////
 module wwm_top (
     input ClkPort,
     input BtnC,
@@ -33,8 +47,21 @@ module wwm_top (
     wire [11:0] rgb;
 
     /* To hold power and angle values */
-    wire [3:0] vX;
-    wire [3:0] vY;
+    reg[3:0] vX;
+    reg[3:0] vY;
+    reg[9:0] projectileCenterX;
+    reg[9:0] projectileCenterY;
+    reg[9:0] X_INITIAL;
+    reg[9:0] Y_INITIAL;
+    reg[49:0] t_air;
+
+    initial begin
+        X_INITIAL = 10'd213;
+		Y_INITIAL = 10'd472;
+        vX = 10'd16;
+		vY = 10'd16;
+        t_air = 10'd0;
+    end
 
     /* SSD display stuff */
     wire [1:0] ssdscan_clk;
@@ -52,6 +79,8 @@ module wwm_top (
 
     /* Instantiate State Machine */
     wwm_sm sm(.clk(board_clk), .Reset(Reset), .Start(Start), .Ack(Ack), .Fire(Fire), .vX(vX), .vY(vY), .projectileCenterX(projectileCenterX), .projectileCenterY(projectileCenterY), .q_I(q_I), .q_P1Shoot(q_P1Shoot), .q_Animate(q_Animate), .q_Done(q_Done));
+    /* Instantiate Animation File */
+    vga_bitchange vb(.clk(board_clk), .bright(bright), .vX(vX), .vY(vY), .q_Animate(q_Animate), .X_INITIAL(X_INITIAL), .Y_INITIAL(Y_INITIAL), .hCount(hc), .vCount(vc), .rgb(rgb), .projectileCenterX(projectileCenterX), .projectileCenterY(projectileCenterY), .t_air(t_air));
 
     /* SUGGESTION: ADD DEBOUNCER FOR BUTTONS */
 
