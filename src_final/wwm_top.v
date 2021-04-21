@@ -49,16 +49,15 @@ module wwm_top (
     /* To hold power and angle values */
     reg[3:0] vX;
     reg[3:0] vY;
-    reg[9:0] projectileCenterX;
-    reg[9:0] projectileCenterY;
+    wire[9:0] projectileCenterX;
+    wire[9:0] projectileCenterY;
     reg[9:0] X_INITIAL;
     reg[9:0] Y_INITIAL;
-    reg[49:0] t_air;
+    wire[49:0] t_air;
 
-    initial begin
+    always@ (posedge Reset) begin
         X_INITIAL = 10'd213;
 		Y_INITIAL = 10'd472;
-        t_air = 10'd0;
     end
 
     /* SSD display stuff */
@@ -76,9 +75,9 @@ module wwm_top (
     assign Fire = BtnR;
 
     /* Instantiate State Machine */
-    wwm_sm sm(.clk(board_clk), .Reset(Reset), .Start(Start), .Ack(Ack), .Fire(Fire), .vX(vX), .vY(vY), .projectileCenterX(projectileCenterX), .projectileCenterY(projectileCenterY), .q_I(q_I), .q_P1Shoot(q_P1Shoot), .q_Animate(q_Animate), .q_Done(q_Done));
+    wwm_sm sm(.clk(board_clk), .Reset(Reset), .Start(Start), .Ack(Ack), .Fire(Fire), .projectileCenterX(projectileCenterX), .projectileCenterY(projectileCenterY), .q_I(q_I), .q_P1Shoot(q_P1Shoot), .q_Animate(q_Animate), .q_Done(q_Done));
     /* Instantiate Animation File */
-    vga_bitchange vb(.clk(board_clk), .bright(bright), .vX(vX), .vY(vY), .q_Animate(q_Animate), .X_INITIAL(X_INITIAL), .Y_INITIAL(Y_INITIAL), .hCount(hc), .vCount(vc), .rgb(rgb), .projectileCenterX(projectileCenterX), .projectileCenterY(projectileCenterY), .t_air(t_air));
+    vga_bitchange vb(.clk(board_clk), .bright(bright), .vX(vX), .vY(vY), .q_Animate(q_Animate), .q_P1Shoot(q_P1Shoot), .X_INITIAL(X_INITIAL), .Y_INITIAL(Y_INITIAL), .hCount(hc), .vCount(vc), .rgb(rgb), .projectileCenterX(projectileCenterX), .projectileCenterY(projectileCenterY), .t_air(t_air));
 
     /* SUGGESTION: ADD DEBOUNCER FOR BUTTONS */
 
@@ -91,7 +90,7 @@ module wwm_top (
     end
 
     /* Get x velocity and y velocity */
-    always @ (posedge board_clk, posedge Reset)
+    always @(posedge board_clk)
     begin
         vX <= (10'd8)*Sw7 + (10'd4)*Sw6 + (10'd2)*Sw5 + (10'd1)*Sw4;
         vY <= (10'd8)*Sw3 + (10'd4)*Sw2 + (10'd2)*Sw1 + (10'd1)*Sw0;
