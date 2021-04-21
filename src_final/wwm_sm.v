@@ -20,8 +20,8 @@ module wwm_sm(
     input Start,
     input Ack,
     input Fire,
-    input projectileCenterX,
-    input projectileCenterY,
+    input [9:0] projectileCenterX,
+    input [9:0] projectileCenterY,
     output q_I,
     output q_P1Shoot,
     output q_Animate, q_Done

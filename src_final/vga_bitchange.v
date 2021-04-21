@@ -61,6 +61,8 @@ module vga_bitchange(
 	initial 
 	begin
 		GRAV = 10'd1;
+        projectileCenterX = X_INITIAL;
+        projectileCenterY = Y_INITIAL;
 	end
 	
 	
@@ -91,7 +93,7 @@ module vga_bitchange(
         end
         if(q_Animate)   // Only animate in the animate state
         begin
-            projectileTime = projectileTime + 10'd1;
+            projectileTime <= projectileTime + 10'd1;
             if (projectileTime >= 50'd50000000)     // Move the projectile every 50 million clocks (0.5 seconds)
                 begin
                     projectileTime <= 10'd0;

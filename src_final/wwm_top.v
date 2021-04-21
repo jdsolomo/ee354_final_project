@@ -74,10 +74,37 @@ module wwm_top (
     assign Start = BtnU;
     assign Fire = BtnR;
 
+    /* Instantiate VGA controller */
+    display_controller dc(.clk(board_clk), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
     /* Instantiate State Machine */
-    wwm_sm sm(.clk(board_clk), .Reset(Reset), .Start(Start), .Ack(Ack), .Fire(Fire), .projectileCenterX(projectileCenterX), .projectileCenterY(projectileCenterY), .q_I(q_I), .q_P1Shoot(q_P1Shoot), .q_Animate(q_Animate), .q_Done(q_Done));
+    wwm_sm sm(
+        .clk(board_clk),
+        .Reset(Reset),
+        .Start(Start),
+        .Ack(Fire),
+        .Fire(Fire),
+        .projectileCenterX(projectileCenterX),
+        .projectileCenterY(projectileCenterY),
+        .q_I(q_I),
+        .q_P1Shoot(q_P1Shoot),
+        .q_Animate(q_Animate),
+        .q_Done(q_Done));
     /* Instantiate Animation File */
-    vga_bitchange vb(.clk(board_clk), .bright(bright), .vX(vX), .vY(vY), .q_Animate(q_Animate), .q_P1Shoot(q_P1Shoot), .X_INITIAL(X_INITIAL), .Y_INITIAL(Y_INITIAL), .hCount(hc), .vCount(vc), .rgb(rgb), .projectileCenterX(projectileCenterX), .projectileCenterY(projectileCenterY), .t_air(t_air));
+    vga_bitchange vb(
+        .clk(board_clk),
+        .bright(bright),
+        .vX(vX),
+        .vY(vY),
+        .q_Animate(q_Animate),
+        .q_P1Shoot(q_P1Shoot),
+        .X_INITIAL(X_INITIAL),
+        .Y_INITIAL(Y_INITIAL),
+        .hCount(hc),
+        .vCount(vc),
+        .rgb(rgb),
+        .projectileCenterX(projectileCenterX),
+        .projectileCenterY(projectileCenterY),
+        .t_air(t_air));
 
     /* SUGGESTION: ADD DEBOUNCER FOR BUTTONS */
 
@@ -92,8 +119,11 @@ module wwm_top (
     /* Get x velocity and y velocity */
     always @(posedge board_clk)
     begin
-        vX <= (10'd8)*Sw7 + (10'd4)*Sw6 + (10'd2)*Sw5 + (10'd1)*Sw4;
-        vY <= (10'd8)*Sw3 + (10'd4)*Sw2 + (10'd2)*Sw1 + (10'd1)*Sw0;
+        if(!q_Animate)
+        begin
+            vX <= (10'd8)*Sw7 + (10'd4)*Sw6 + (10'd2)*Sw5 + (10'd1)*Sw4;
+            vY <= (10'd8)*Sw3 + (10'd4)*Sw2 + (10'd2)*Sw1 + (10'd1)*Sw0;
+        end
     end
 
     /* FOR TESTING PURPOSES */
@@ -143,9 +173,6 @@ module wwm_top (
 
     /* Light up SSD's */
     assign {Ca, Cb, Cc, Cd, Ce, Cf, Cg, Dp} = {SSD_CATHODES};
-
-    /* Instantiate VGA controller */
-    display_controller dc(.clk(clkPort), .hSync(hSync), .vSync(vSync), .bright(bright), .hCount(hc), .vCount(vc));
 
     /* Light up monitor display */
     assign vgaR = rgb[11:8];
