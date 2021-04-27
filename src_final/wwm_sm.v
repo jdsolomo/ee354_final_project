@@ -10,7 +10,7 @@
 // Tool versions: 
 // Description:     State machine (Initial, Shoot, Animate, Done)
 //
-// Dependencies:    
+// Dependencies:    None
 //
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -22,6 +22,7 @@ module wwm_sm(
     input Fire,
     input [9:0] projectileCenterX,
     input [9:0] projectileCenterY,
+    input [9:0] targetCenterX,
     output q_I,
     output q_P1Shoot,
     output q_Animate, q_Done
@@ -66,7 +67,7 @@ module wwm_sm(
                 ANIMATE:
                 begin
                     // state transfers
-                    if((projectileCenterX <= 10'd675) && (projectileCenterX >= 10'd650) && (projectileCenterY >= 10'd470) && (projectileCenterY <= 10'd475)) state <= DONE;
+                    if((projectileCenterX <= targetCenterX + 10'd15) && (projectileCenterX >= targetCenterX - 10'd15) && (projectileCenterY >= 10'd470) && (projectileCenterY <= 10'd475)) state <= DONE;
                     else if((projectileCenterX >= 10'd775) || (projectileCenterX <= 10'd160) || (projectileCenterY >= 10'd475) || (projectileCenterY <= 10'd50)) state <= P1SHOOT;
                     // data transfers
 

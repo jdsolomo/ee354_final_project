@@ -19,21 +19,22 @@
 //
 // Date:            4/20/2021
 // Author:          James Dawson and Josh Solomon
-// Description:     Animate a projectile using a VGA cable and monitor
+// Description:     Alter the display based on state
+// Dependencies:    bitmaps.v
 //////////////////////////////////////////////////////////////////////////////////
 module vga_bitchange(
 	input clk,
 	input bright,
     input [3:0] vX,
     input [3:0] vY,
-    input q_Animate,
-    input q_P1Shoot,
+    input q_I, q_Animate, q_P1Shoot,
     input [9:0] X_INITIAL,
     input [9:0] Y_INITIAL,
 	input [9:0] hCount, vCount,
 	output reg [11:0] rgb,
 	output reg [9:0] projectileCenterX,
     output reg [9:0] projectileCenterY,
+    output reg [9:0] targetCenterX,
     output reg [49:0] t_air
    );
 	
@@ -43,6 +44,15 @@ module vga_bitchange(
 	parameter RED   = 12'b1111_0000_0000;
 	parameter GREEN = 12'b0000_1111_0000;
 	parameter BLUE = 12'b0000_0000_1111;
+
+    /* Screen locations */
+    parameter TOP = 10'd050;
+    parameter BTM = 10'd475;
+    parameter LFT = 10'd160;
+    parameter RGT = 10'd775;
+    parameter MDY = (TOP+BTM)/2;
+    parameter MDX = (LFT+RGT)/2;
+    parameter TITLEY = TOP+((BTM-TOP)/2);
 
     /* Screen elements */
     wire groundPlane;
@@ -63,38 +73,62 @@ module vga_bitchange(
 		GRAV = 10'd1;
         projectileCenterX = X_INITIAL;
         projectileCenterY = Y_INITIAL;
+        targetCenterX = 10'd668;
 	end
 	
+    reg [8:0] rnd;
+    always @(posedge clk)
+    begin
+        rnd <= rnd + 1'b1;
+    end
 	
 	always@ (*)
-    	if (~bright)
-		    rgb = BLACK; // Force black if not bright
-         else if (edgeBox == 1) // Edge of screen
-            rgb = WHITE;
-         else if (groundPlane == 1) // Ground box
-            rgb = WHITE;
-         else if (cannonRectangle == 1) // Player's cannon (initial x and y)
-            rgb = WHITE;
-         else if (projectileBox == 1) // Rectangular projectile
-            rgb = GREEN;
-         else if (target == 1)  // Target rectangle
-            rgb = RED;
-         else
-            rgb = BLACK; // Background color
+    begin
+        if(!q_I)
+        begin
+            if (~bright)
+                rgb = BLACK; // Force black if not bright
+            else if (edgeBox == 1) // Edge of screen
+                rgb = WHITE;
+            else if (groundPlane == 1) // Ground box
+                rgb = WHITE;
+            else if (cannonRectangle == 1) // Player's cannon (initial x and y)
+                rgb = WHITE;
+            else if (projectileBox == 1) // Rectangular projectile
+                rgb = GREEN;
+            else if (target == 1)  // Target rectangle
+                rgb = RED;
+            else
+                rgb = BLACK; // Background color
+        end
+        else
+        begin
+            if(~bright)
+                rgb = BLACK;
+            else if(render_title)
+                rgb = GREEN;
+            else
+                rgb = BLACK;
+        end
+    end
 
     /* Animate projectile moving */
     always@ (posedge clk)
     begin
-        if(q_P1Shoot)
+        if(q_I)
+        begin
+            targetCenterX <= 10'd223 + 10'd256 * rnd[8] + 10'd128 * rnd[7] + 10'd64 * rnd[6] + 10'd32 * rnd[5] + 10'd16 * rnd[4] + /*10'd8 * rnd[3] +*/ 10'd4 * rnd[2] + 10'd2 * rnd[1] + 10'd1 * rnd[0];
+        end
+        else if(q_P1Shoot)
         begin
             t_air <= 10'd0;
             projectileCenterX <= X_INITIAL;
             projectileCenterY <= Y_INITIAL;
         end
-        if(q_Animate)   // Only animate in the animate state
+        else if(q_Animate)   // Only animate in the animate state
         begin
             projectileTime <= projectileTime + 10'd1;
-            if (projectileTime >= 50'd50000000)     // Move the projectile every 50 million clocks (0.5 seconds)
+            if (projectileTime >= 50'd10000000)     // Move the projectile every 50 million clocks (0.5 seconds)
                 begin
                     projectileTime <= 10'd0;
                     t_air <= t_air + 10'd1;
@@ -104,13 +138,44 @@ module vga_bitchange(
         end
     end
 
+    /* pixel slices of images */
+    wire [29:0] xbitsW1, xbitsO, xbitsR1, xbitsL, xbitsD;
+    wire [29:0] xbitsW2, xbitsA1, xbitsR2;
+    wire [29:0] xbitsM, xbitsA2, xbitsT, xbitsH;
+    wire [29:0] xbits_, xbits__;
+
+    /* Display control variables */
+    wire [4:0] title_y;
+    wire [419:0] title_xbits;
+
+    /* Initialize image pixel modules */
+    W W1(.y(title_y), .xbits(xbitsW1));
+    O O(.y(title_y), .xbits(xbitsO));
+    R R1(.y(title_y), .xbits(xbitsR1));
+    L L(.y(title_y), .xbits(xbitsL));
+    D D(.y(title_y), .xbits(xbitsD));
+    W W2(.y(title_y), .xbits(xbitsW2));
+    A A1(.y(title_y), .xbits(xbitsA1));
+    R R2(.y(title_y), .xbits(xbitsR2));
+    M M(.y(title_y), .xbits(xbitsM));
+    A A2(.y(title_y), .xbits(xbitsA2));
+    T T(.y(title_y), .xbits(xbitsT));
+    H H(.y(title_y), .xbits(xbitsH));
+    _ _(.y(title_y), .xbits(xbits_));
+    _ __(.y(title_y), .xbits(xbits__));
+
+    /* Regulate pixel slices */
+    assign title_y = (vCount - (TITLEY-10'd15));
+    assign title_xbits = {xbitsH, xbitsT, xbitsA2, xbitsM, xbits__, xbitsR2, xbitsA1, xbitsW2, xbits_, xbitsD, xbitsL, xbitsR1, xbitsO, xbitsW1};
+    assign title = ((vCount >= TITLEY - 10'd15) && (vCount < TITLEY + 10'd15) && (hCount >= MDX - 10'd210) && (hCount < MDX + 10'd210)) ? 1 : 0;
+    assign render_title = (title && title_xbits[hCount-(MDX - 10'd210)]) ? 1 : 0;
     // Borders
     assign groundPlane = ((hCount >= 10'd156) && (hCount <= 10'd774)) && ((vCount >= 10'd475) && (vCount <= 10'd525)) ? 1 : 0;
     assign edgeBox = (hCount <= 10'd155) || (hCount >= 10'd775) || (vCount <= 10'd50) ? 1 : 0;
     // Projectile
     assign projectileBox = ((hCount <= (projectileCenterX + 10'd5)) && (hCount >= projectileCenterX)) && (vCount >= projectileCenterY) && ((vCount <= (projectileCenterY + 10'd2))) ? 1 : 0;
     // Targets
-    assign target = ((hCount <= 10'd675) && (hCount >= 10'd650) && (vCount >= 10'd470) && (vCount <= 10'd475)) ? 1 : 0;
+    assign target = ((hCount <= targetCenterX + 10'd10) && (hCount >= targetCenterX - 10'd10) && (vCount >= 10'd470) && (vCount <= 10'd475)) ? 1 : 0;
     assign cannonRectangle = ((hCount >= 10'd200) && (hCount <= 10'd215)) && ((vCount >= 10'd465) && (vCount <= 10'd475)) ? 1 : 0;
 	
 endmodule

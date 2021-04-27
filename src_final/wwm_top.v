@@ -51,6 +51,7 @@ module wwm_top (
     reg[3:0] vY;
     wire[9:0] projectileCenterX;
     wire[9:0] projectileCenterY;
+    wire[9:0] targetCenterX;
     reg[9:0] X_INITIAL;
     reg[9:0] Y_INITIAL;
     wire[49:0] t_air;
@@ -85,6 +86,7 @@ module wwm_top (
         .Fire(Fire),
         .projectileCenterX(projectileCenterX),
         .projectileCenterY(projectileCenterY),
+        .targetCenterX(targetCenterX),
         .q_I(q_I),
         .q_P1Shoot(q_P1Shoot),
         .q_Animate(q_Animate),
@@ -95,6 +97,7 @@ module wwm_top (
         .bright(bright),
         .vX(vX),
         .vY(vY),
+        .q_I(q_I),
         .q_Animate(q_Animate),
         .q_P1Shoot(q_P1Shoot),
         .X_INITIAL(X_INITIAL),
@@ -104,6 +107,7 @@ module wwm_top (
         .rgb(rgb),
         .projectileCenterX(projectileCenterX),
         .projectileCenterY(projectileCenterY),
+        .targetCenterX(targetCenterX),
         .t_air(t_air));
 
     /* SUGGESTION: ADD DEBOUNCER FOR BUTTONS */
