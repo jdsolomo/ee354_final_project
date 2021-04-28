@@ -487,7 +487,6 @@ module CANNON(y, xbits);
 	output [13:0] xbits;
 	reg [39:0] bitarray[0:13];
 	assign xbits = bitarray[y];
-	assign xbits
 	initial begin
 		bitarray[0]  = 40'b00000_001111000000001_100000000000000_00000;
 		bitarray[1]  = 40'b00000_000111100011111_111110000000000_00000;

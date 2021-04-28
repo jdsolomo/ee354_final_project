@@ -100,6 +100,7 @@ module wwm_top (
         .q_I(q_I),
         .q_Animate(q_Animate),
         .q_P1Shoot(q_P1Shoot),
+        .q_Done(q_Done),
         .X_INITIAL(X_INITIAL),
         .Y_INITIAL(Y_INITIAL),
         .hCount(hc),

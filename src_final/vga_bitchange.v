@@ -27,7 +27,7 @@ module vga_bitchange(
 	input bright,
     input [3:0] vX,
     input [3:0] vY,
-    input q_I, q_Animate, q_P1Shoot,
+    input q_I, q_Animate, q_P1Shoot, q_Done,
     input [9:0] X_INITIAL,
     input [9:0] Y_INITIAL,
 	input [9:0] hCount, vCount,
@@ -53,10 +53,12 @@ module vga_bitchange(
     parameter MDY = (TOP+BTM)/2;
     parameter MDX = (LFT+RGT)/2;
     parameter TITLEY = TOP+((BTM-TOP)/2);
+    parameter CANONY = 10'd470;
+    parameter CANONX = 10'd210;
 
     /* Screen elements */
     wire groundPlane;
-    wire cannonRectangle;
+    // wire cannonRectangle;
     wire edgeBox;
     wire projectileBox;
     wire target;
@@ -84,7 +86,7 @@ module vga_bitchange(
 	
 	always@ (*)
     begin
-        if(!q_I)
+        if(q_P1Shoot || q_Animate)
         begin
             if (~bright)
                 rgb = BLACK; // Force black if not bright
@@ -92,7 +94,7 @@ module vga_bitchange(
                 rgb = WHITE;
             else if (groundPlane == 1) // Ground box
                 rgb = WHITE;
-            else if (cannonRectangle == 1) // Player's cannon (initial x and y)
+            else if (cannon == 1) // Player's cannon (initial x and y)
                 rgb = WHITE;
             else if (projectileBox == 1) // Rectangular projectile
                 rgb = GREEN;
@@ -101,11 +103,20 @@ module vga_bitchange(
             else
                 rgb = BLACK; // Background color
         end
-        else
+        else if(q_I)
         begin
             if(~bright)
                 rgb = BLACK;
             else if(render_title)
+                rgb = GREEN;
+            else
+                rgb = BLACK;
+        end
+        else if(q_Done)
+        begin
+            if(~bright)
+                rgb = BLACK;
+            else if(render_done)
                 rgb = GREEN;
             else
                 rgb = BLACK;
@@ -143,10 +154,15 @@ module vga_bitchange(
     wire [29:0] xbitsW2, xbitsA1, xbitsR2;
     wire [29:0] xbitsM, xbitsA2, xbitsT, xbitsH;
     wire [29:0] xbits_, xbits__;
+    wire [13:0] xbitsCannon;
+    wire [29:0] xbitsW3, xbitsI, xbitsN;
 
     /* Display control variables */
     wire [4:0] title_y;
     wire [419:0] title_xbits;
+    wire [3:0] cannon_y;
+    wire [4:0] done_y;
+    wire [89:0] done_xbits;
 
     /* Initialize image pixel modules */
     W W1(.y(title_y), .xbits(xbitsW1));
@@ -163,12 +179,30 @@ module vga_bitchange(
     H H(.y(title_y), .xbits(xbitsH));
     _ _(.y(title_y), .xbits(xbits_));
     _ __(.y(title_y), .xbits(xbits__));
+    CANNON CANNON(.y(cannon_y), .xbits(xbitsCannon));
+    W W3(.y(done_y), .xbits(xbitsW3));
+    I I(.y(done_y), .xbits(xbitsI));
+    N N(.y(done_y), .xbits(xbitsN));
 
-    /* Regulate pixel slices */
+    /* Choose Y location */
     assign title_y = (vCount - (TITLEY-10'd15));
+    assign cannon_y = (vCount - (CANONY-10'd7));
+    assign done_y = (vCount - (TITLEY-10'd15));
+
+    /* Concatenate letters */
     assign title_xbits = {xbitsH, xbitsT, xbitsA2, xbitsM, xbits__, xbitsR2, xbitsA1, xbitsW2, xbits_, xbitsD, xbitsL, xbitsR1, xbitsO, xbitsW1};
+    assign done_xbits = {xbitsN, xbitsI, xbitsW3};
+
+    /* Make rectangular mask for shape */
     assign title = ((vCount >= TITLEY - 10'd15) && (vCount < TITLEY + 10'd15) && (hCount >= MDX - 10'd210) && (hCount < MDX + 10'd210)) ? 1 : 0;
+    assign cannon = ((vCount >= CANONY - 10'd7) && (vCount < CANONY + 10'd7) && (hCount >= CANONX - 10'd20) && (hCount < CANONX + 10'd20)) ? 1 : 0;
+    assign done = ((vCount >= TITLEY - 10'd15) && (vCount < TITLEY + 10'd15) && (hCount >= MDX - 10'd45) && (hCount < MDX + 10'd45)) ? 1 : 0;
+
+    /* AND rectangular mask with each shape */
     assign render_title = (title && title_xbits[hCount-(MDX - 10'd210)]) ? 1 : 0;
+    assign render_cannon = (cannon && xbitsCannon) ? 1 : 0;
+    assign render_done = (done && done_xbits[hCount-(MDX - 10'd45)]) ? 1 : 0;
+
     // Borders
     assign groundPlane = ((hCount >= 10'd156) && (hCount <= 10'd774)) && ((vCount >= 10'd475) && (vCount <= 10'd525)) ? 1 : 0;
     assign edgeBox = (hCount <= 10'd155) || (hCount >= 10'd775) || (vCount <= 10'd50) ? 1 : 0;
@@ -176,6 +210,6 @@ module vga_bitchange(
     assign projectileBox = ((hCount <= (projectileCenterX + 10'd5)) && (hCount >= projectileCenterX)) && (vCount >= projectileCenterY) && ((vCount <= (projectileCenterY + 10'd2))) ? 1 : 0;
     // Targets
     assign target = ((hCount <= targetCenterX + 10'd10) && (hCount >= targetCenterX - 10'd10) && (vCount >= 10'd470) && (vCount <= 10'd475)) ? 1 : 0;
-    assign cannonRectangle = ((hCount >= 10'd200) && (hCount <= 10'd215)) && ((vCount >= 10'd465) && (vCount <= 10'd475)) ? 1 : 0;
+    // assign cannonRectangle = ((hCount >= 10'd200) && (hCount <= 10'd215)) && ((vCount >= 10'd465) && (vCount <= 10'd475)) ? 1 : 0;
 	
 endmodule

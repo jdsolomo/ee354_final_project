@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
-| Date         : Mon Apr 26 17:17:44 2021
+| Date         : Mon Apr 26 20:18:24 2021
 | Host         : DESKTOP-J7VM5Q4 running 64-bit major release  (build 9200)
 | Command      : report_methodology -file wwm_top_methodology_drc_routed.rpt -pb wwm_top_methodology_drc_routed.pb -rpx wwm_top_methodology_drc_routed.rpx
 | Design       : wwm_top
@@ -23,12 +23,14 @@ Table of Contents
           Floorplan: design_1
       Design limits: <entire design considered>
              Max violations: <unlimited>
-             Violations found: 58
+             Violations found: 50
 +-----------+------------------+-------------------------------+------------+
 | Rule      | Severity         | Description                   | Violations |
 +-----------+------------------+-------------------------------+------------+
 | TIMING-17 | Critical Warning | Non-clocked sequential cell   | 22         |
-| TIMING-18 | Warning          | Missing input or output delay | 36         |
+| LUTAR-1   | Warning          | LUT drives async reset alert  | 1          |
+| TIMING-18 | Warning          | Missing input or output delay | 24         |
+| TIMING-20 | Warning          | Non-clocked latch             | 3          |
 +-----------+------------------+-------------------------------+------------+
 
 2. REPORT DETAILS
@@ -141,6 +143,11 @@ Related violations: <none>
 TIMING-17#22 Critical Warning
 Non-clocked sequential cell  
 The clock pin dc/vCount_reg[9]/C is not reached by a timing clock
+Related violations: <none>
+
+LUTAR-1#1 Warning
+LUT drives async reset alert  
+LUT cell sm/rgb_reg[11]_i_3, with 2 or more inputs, drives asynchronous preset/clear pin(s) vb/rgb_reg[11]/CLR, vb/rgb_reg[3]/CLR, vb/rgb_reg[7]/CLR. The LUT may glitch and trigger an unexpected reset, even if it is a properly timed path.
 Related violations: <none>
 
 TIMING-18#1 Warning
@@ -263,64 +270,19 @@ Missing input or output delay
 An output delay is missing on Ld3 relative to clock(s) ClkPort
 Related violations: <none>
 
-TIMING-18#25 Warning
-Missing input or output delay  
-An output delay is missing on vgaB[0] relative to clock(s) ClkPort
+TIMING-20#1 Warning
+Non-clocked latch  
+The latch vb/rgb_reg[11] cannot be properly analyzed as its control pin vb/rgb_reg[11]/G is not reached by a timing clock
 Related violations: <none>
 
-TIMING-18#26 Warning
-Missing input or output delay  
-An output delay is missing on vgaB[1] relative to clock(s) ClkPort
+TIMING-20#2 Warning
+Non-clocked latch  
+The latch vb/rgb_reg[3] cannot be properly analyzed as its control pin vb/rgb_reg[3]/G is not reached by a timing clock
 Related violations: <none>
 
-TIMING-18#27 Warning
-Missing input or output delay  
-An output delay is missing on vgaB[2] relative to clock(s) ClkPort
-Related violations: <none>
-
-TIMING-18#28 Warning
-Missing input or output delay  
-An output delay is missing on vgaB[3] relative to clock(s) ClkPort
-Related violations: <none>
-
-TIMING-18#29 Warning
-Missing input or output delay  
-An output delay is missing on vgaG[0] relative to clock(s) ClkPort
-Related violations: <none>
-
-TIMING-18#30 Warning
-Missing input or output delay  
-An output delay is missing on vgaG[1] relative to clock(s) ClkPort
-Related violations: <none>
-
-TIMING-18#31 Warning
-Missing input or output delay  
-An output delay is missing on vgaG[2] relative to clock(s) ClkPort
-Related violations: <none>
-
-TIMING-18#32 Warning
-Missing input or output delay  
-An output delay is missing on vgaG[3] relative to clock(s) ClkPort
-Related violations: <none>
-
-TIMING-18#33 Warning
-Missing input or output delay  
-An output delay is missing on vgaR[0] relative to clock(s) ClkPort
-Related violations: <none>
-
-TIMING-18#34 Warning
-Missing input or output delay  
-An output delay is missing on vgaR[1] relative to clock(s) ClkPort
-Related violations: <none>
-
-TIMING-18#35 Warning
-Missing input or output delay  
-An output delay is missing on vgaR[2] relative to clock(s) ClkPort
-Related violations: <none>
-
-TIMING-18#36 Warning
-Missing input or output delay  
-An output delay is missing on vgaR[3] relative to clock(s) ClkPort
+TIMING-20#3 Warning
+Non-clocked latch  
+The latch vb/rgb_reg[7] cannot be properly analyzed as its control pin vb/rgb_reg[7]/G is not reached by a timing clock
 Related violations: <none>
 
 

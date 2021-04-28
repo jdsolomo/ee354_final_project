@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2020.2 (win64) Build 3064766 Wed Nov 18 09:12:45 MST 2020
-| Date             : Mon Apr 26 17:17:45 2021
+| Date             : Mon Apr 26 20:18:24 2021
 | Host             : DESKTOP-J7VM5Q4 running 64-bit major release  (build 9200)
 | Command          : report_power -file wwm_top_power_routed.rpt -pb wwm_top_power_summary_routed.pb -rpx wwm_top_power_routed.rpx
 | Design           : wwm_top
@@ -53,15 +53,15 @@ Table of Contents
 | On-Chip        | Power (W) | Used     | Available | Utilization (%) |
 +----------------+-----------+----------+-----------+-----------------+
 | Clocks         |     0.001 |        3 |       --- |             --- |
-| Slice Logic    |     0.002 |      691 |       --- |             --- |
-|   LUT as Logic |     0.002 |      359 |     63400 |            0.57 |
+| Slice Logic    |     0.003 |      733 |       --- |             --- |
+|   LUT as Logic |     0.002 |      384 |     63400 |            0.61 |
 |   CARRY4       |    <0.001 |       52 |     15850 |            0.33 |
-|   Register     |    <0.001 |      155 |    126800 |            0.12 |
-|   F7/F8 Muxes  |    <0.001 |       11 |     63400 |            0.02 |
+|   Register     |    <0.001 |      158 |    126800 |            0.12 |
+|   F7/F8 Muxes  |    <0.001 |       10 |     63400 |            0.02 |
 |   Others       |     0.000 |       10 |       --- |             --- |
-| Signals        |     0.002 |      544 |       --- |             --- |
+| Signals        |     0.002 |      591 |       --- |             --- |
 | DSPs           |    <0.001 |        1 |       240 |            0.42 |
-| I/O            |     0.014 |       54 |       210 |           25.71 |
+| I/O            |     0.013 |       54 |       210 |           25.71 |
 | Static Power   |     0.097 |          |           |                 |
 | Total          |     0.117 |          |           |                 |
 +----------------+-----------+----------+-----------+-----------------+
