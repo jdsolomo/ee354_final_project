@@ -1,5 +1,5 @@
 <p align="center">
-    <h3>World War Math</h3>
+    <h3 align="center">World War Math</h3>
     <p align="center">An 8-bit hardware-defined video game</p>
 </p>
 
